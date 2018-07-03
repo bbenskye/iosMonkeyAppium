@@ -23,7 +23,7 @@ public class MonkeySwipeEvent extends MonkeyEvent {
         double startY = Math.ceil(Math.random() * (height - 1));
         double endX = Math.ceil(Math.random() * (width - 1));
         double endY = Math.ceil(Math.random() * (height - 1));
-        System.out.println("sending Swipe Event : Swipe-> [start(" + startX + "," + startY + "), end(" + startX + "," + endY+")]");
+        System.out.println("sending Swipe Event : Swipe-> [start(" + startX + "," + startY + "), end(" + endX + "," + endY+")]");
         driver.swipe((int)startX,(int)startY,(int)endX,(int)endY,200);
 
         return MonkeyEvent.INJECT_SUCCESS;
