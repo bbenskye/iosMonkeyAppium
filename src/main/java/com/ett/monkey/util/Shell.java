@@ -12,7 +12,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class Shell {
 
+    public static ScheduledExecutorService service;
+    public static boolean stop = false;
+
     public static void launchAPP(final String UDID, final String BUNDLEID) throws IOException, InterruptedException {
+        service = Executors.newSingleThreadScheduledExecutor();
+        stop = false;
+
         Runnable runnable = new Runnable() {
             public void run() {
                 Process pp;
@@ -27,9 +33,10 @@ public class Shell {
                     String line;
                     String curbundleid = BUNDLEID;
 
-                    while ((line = bufferedReader.readLine()) != null) {
+                    while ((line = bufferedReader.readLine()) != null && !stop) {
+//                        System.out.println("123");
                         if (line.contains("HW kbd: currently")) {
-                            System.out.println("=============="+line);
+                            System.out.println("==============" + line);
                             if (line.split(" ")[8].equals("currently")) {
                                 curbundleid = line.split(" ")[9];
                             } else {
@@ -75,8 +82,7 @@ public class Shell {
                 }
             }
         };
-        ScheduledExecutorService service = Executors
-                .newSingleThreadScheduledExecutor();
+
         // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
         service.scheduleAtFixedRate(runnable, 30, 10, TimeUnit.SECONDS);
     }
@@ -88,6 +94,13 @@ public class Shell {
         p.destroy();
     }
 
+    public static void stopWatching() {
+        System.out.println("stop watching~");
+        if (service != null) {
+            service.shutdownNow();
+        }
+        stop = true;
+    }
 
     public static void main(String[] args) throws IOException, Exception {
         launchAPP("221c0b31b7bb765dc682b8b2c197e2233c9f50e0", "com.vipkid.app-study-iPad");

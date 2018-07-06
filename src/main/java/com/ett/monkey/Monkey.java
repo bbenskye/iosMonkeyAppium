@@ -218,6 +218,8 @@ public class Monkey {
 
             System.out.println("---EVENT执行了：" + eventcount + "次---已运行了（h）：" + String.format("%.4f", (currentTime - startTime) / 1000.0 / 3600));
         }
+        //停止监听app是否在前台
+        Shell.stopWatching();
     }
 
     private void init() throws IOException, InterruptedException {
