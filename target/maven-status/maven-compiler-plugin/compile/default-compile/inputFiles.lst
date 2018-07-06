@@ -6,6 +6,7 @@
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/Monkey.java
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/MonkeyBackEvent.java
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/MonkeyHomeKeyEvent.java
+/Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/util/FileUtil.java
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/util/DeviceUtil.java
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/MonkeyLaunchEvent.java
 /Users/vipkid/workspace/iosMonkeyAppium/src/main/java/com/ett/monkey/MonkeyBackRegionEvent.java

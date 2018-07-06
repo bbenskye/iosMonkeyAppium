@@ -20,11 +20,11 @@ public class MathRandom {
     /**
      * 2出现的概率为%10
      */
-    public static double EVENT_TYPE_BACK = 0.30;
+    public static double EVENT_TYPE_BACK = 0.25;
 
     public static double EVENT_TYPE_SUBMIT = 0.5;
 
-    public static double EVENT_TYPE_CONTENT = 0.05;
+    public static double EVENT_TYPE_CONTENT = 0.5;
 
     public static double EVENT_TYPE_SPECIAL_POINT = 0.05;
 

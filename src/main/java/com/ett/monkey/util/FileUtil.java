@@ -78,16 +78,64 @@ public class FileUtil {
         return getCrashInfo(path, dateStr, bundleId);
     }
 
+    public static List<String> readFileByLines(File file){
+        List<String> lines = new ArrayList<String>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
+
     public static void main(String[] args) {
-        String bundleID = "com.vipkid.app-study-iPadTest";
+
+//        String fileName = null;
+//        int optSetting = 0;
+//
+//        for (; optSetting < args.length; optSetting++) {
+//            if ("-c".equals(args[optSetting])) {
+//                fileName = args[++optSetting];
+//            }
+//        }
+//        if (fileName!=null) {
+//            File file = new File(System.getProperty("user.dir")+"/"+fileName);
+//            BufferedReader br = null;
+//            try {
+//                br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+//
+//                String line = null;
+//                while ((line = br.readLine()) != null) {
+//                    System.out.println(line);
+//                }
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }else {
+//            return;
+//        }
+
+//        String bundleID = "com.vipkid.vipkidParent";
+        String bundleID = "com.vipkid.vipkidParentDev";
 //        String line = readFileByPath("/Users/vipkid/app-study-iPad-2017-09-14-173959.ips", bundleID);
 //        System.out.println(line);
         System.out.println("-------------");
-        List<String> infos = copyCrashReport("/Users/vipkid/workspace/crashreport", bundleID);
+        List<String> infos = getCrashInfo("/Users/vipkid/workspace/crashreport/124", "2018-07-05", bundleID);
         System.out.println("crash count = "+infos.size());
         for (String str : infos) {
             System.out.println(str);
         }
+
     }
 
 }

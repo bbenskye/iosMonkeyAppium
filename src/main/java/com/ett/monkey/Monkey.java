@@ -6,6 +6,7 @@ import com.ett.monkey.util.Shell;
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -24,7 +25,9 @@ public class Monkey {
     private int backX_min, backX_max, backY_min, backY_max;
     private static boolean needhelp = false;
     private static String UDID;
-    private static String BUNDLEID = "com.vipkid.app-study-iPadTest";
+    //    private static String BUNDLEID = "com.vipkid.vipkidParent";
+//    private static String BUNDLEID = "com.vipkid.vipkidParentDev";
+    private static String BUNDLEID = "com.vipkid.app-study-iPad";
     private static String PORT = "4723";
     private static String PROXYPORT = "8100";
     private int backX = 25, backY = 40;
@@ -36,13 +39,10 @@ public class Monkey {
 
     private int tapCount, swipeCount, backCount, errorCount;
 
-    private Monkey(){
-        startTime = System.currentTimeMillis();
-    }
-
     public static void main(String[] args) throws IOException, InterruptedException {
         List<String> ids = DeviceUtil.getDevices();
         UDID = ids.size() > 0 ? ids.get(0) : "";
+//        UDID = "0f39c30fbc3695e5d99871c2b60f315e023eec97";
         monkey = new Monkey();
         monkey.executeParameter(args);
 
@@ -80,6 +80,11 @@ public class Monkey {
             }
 
         }
+        if (configFile != null) {
+            File file = new File(System.getProperty("user.dir") + "/" + configFile);
+            //读取文件并参数赋值
+            getConfigValue(file);
+        }
         if (!needhelp) {
             if (countMax == 0 && timeMax == 0) {
                 System.out.println("请确认事件和时长至少配置一个,需要帮助请输入 java -jar iosMonkey.jar -h");
@@ -102,7 +107,7 @@ public class Monkey {
                 e.printStackTrace();
                 System.out.println("ERROR FOUND: \n" + "deviceName: " + DeviceUtil.getName(UDID)
                         + " version: " + DeviceUtil.getVersion(UDID) + " time: " + String.format("%1$tY-%1$tm-%1$td %1$tT", new Date())
-                +"\nappInfo: " + DeviceUtil.getAppVersion(UDID, BUNDLEID));
+                        + "\nappInfo: " + DeviceUtil.getAppVersion(UDID, BUNDLEID));
                 monkey.executeParameter(new String[]{});
 
             }
@@ -110,8 +115,10 @@ public class Monkey {
     }
 
 
-    private void run() throws Exception {
-        init();
+    public void run() throws Exception {
+        if (driver == null) {
+            init();
+        }
         width = driver.manage().window().getSize().getWidth();
         height = driver.manage().window().getSize().getHeight();
         NumberFormat numberFormat = NumberFormat.getInstance();
@@ -135,11 +142,14 @@ public class Monkey {
         special_point_y = (int) (height * 0.94);
 
         while (true) {
+            if (eventcount == 0) {
+                startTime = System.currentTimeMillis();
+            }
             long currentTime = System.currentTimeMillis();
             if ((countMax != 0 && eventcount >= countMax) || (timeMax != 0 && (currentTime - startTime) >= (timeMax * 3600 * 1000))) {
 
                 List<String> infos = FileUtil.copyCrashReport("/Users/vipkid/workspace/crashreport", BUNDLEID);
-                System.out.println("crash count = "+infos.size());
+                System.out.println("crash count = " + infos.size());
                 for (String str : infos) {
                     System.out.println(str);
                 }
@@ -205,7 +215,8 @@ public class Monkey {
                     break;
                 }
             }
-            System.out.println("---EVENT执行了：" + eventcount + "次---已运行了（h）："+ String.format("%.2f", (currentTime-startTime)/1000.0/3600));
+
+            System.out.println("---EVENT执行了：" + eventcount + "次---已运行了（h）：" + String.format("%.4f", (currentTime - startTime) / 1000.0 / 3600));
         }
     }
 
@@ -236,6 +247,13 @@ public class Monkey {
                     "*******************************************\n");
         }
         //启动app守护进程
-//        Shell.launchAPP(UDID, BUNDLEID);
+        Shell.launchAPP(UDID, BUNDLEID);
+    }
+
+    private void getConfigValue(File file) {
+        List<String> lines = FileUtil.readFileByLines(file);
+        for (String s : lines) {
+            System.out.println(s);
+        }
     }
 }

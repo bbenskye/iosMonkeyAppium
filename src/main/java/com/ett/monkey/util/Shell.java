@@ -19,6 +19,8 @@ public class Shell {
                 try {
 
                     System.out.println("=======启动app守护进程=======");
+                    System.out.println("UDID = " + UDID);
+                    System.out.println("BUNDLEID = " + BUNDLEID);
                     pp = Runtime.getRuntime().exec("/usr/local/bin/idevicesyslog -u " + UDID);
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(pp.getInputStream()));
 
@@ -26,7 +28,6 @@ public class Shell {
                     String curbundleid = BUNDLEID;
 
                     while ((line = bufferedReader.readLine()) != null) {
-//                        System.out.println(line);
                         if (line.contains("HW kbd: currently")) {
                             System.out.println("=============="+line);
                             if (line.split(" ")[8].equals("currently")) {
@@ -41,19 +42,28 @@ public class Shell {
                                 Runtime.getRuntime().exec("/usr/local/bin/idevicedebug -u " + UDID + " run " + BUNDLEID);
                             }
                         } else if (line.contains(curbundleid) && line.contains("not foreground")) {
-                            new Thread(new Runnable() {
-                                public void run() {
-                                    try {
-                                        exec("pkill idevicedebug");
-                                        System.out.println("idevicedebug stop");
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }).start();
-                            System.out.println("==当前启动的APP bundleid是<" + curbundleid + ">,非测试APP，重新呼起测试APP====");
+//                            new Thread(new Runnable() {
+//                                public void run() {
+//                                    try {
+//                                        exec("pkill idevicedebug");
+//                                        System.out.println("idevicedebug stop");
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    } catch (InterruptedException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }).start();
+                            try {
+                                exec("pkill idevicedebug");
+                                System.out.println("idevicedebug stop");
+                                Thread.sleep(2000);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            System.out.println("==当前启动的APP bundleid不是<" + curbundleid + ">,非测试APP，重新呼起测试APP====");
                             Runtime.getRuntime().exec("/usr/local/bin/idevicedebug -u " + UDID + " run " + BUNDLEID);
                         }
                     }
@@ -68,7 +78,7 @@ public class Shell {
         ScheduledExecutorService service = Executors
                 .newSingleThreadScheduledExecutor();
         // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
-        service.scheduleAtFixedRate(runnable, 3, 10, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 30, 10, TimeUnit.SECONDS);
     }
 
     public static void exec(String command) throws IOException, InterruptedException {
@@ -80,6 +90,6 @@ public class Shell {
 
 
     public static void main(String[] args) throws IOException, Exception {
-        launchAPP("221c0b31b7bb765dc682b8b2c197e2233c9f50e0", "com.vipkid.app-study-iPadTest");
+        launchAPP("221c0b31b7bb765dc682b8b2c197e2233c9f50e0", "com.vipkid.app-study-iPad");
     }
 }
